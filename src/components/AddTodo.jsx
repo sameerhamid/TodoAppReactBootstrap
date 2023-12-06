@@ -1,40 +1,33 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 const AddTodo = ({ handleNewItem }) => {
-  const [inputVal, setInputVal] = useState("");
-  const [date, setDate] = useState("");
+  // const [inputVal, setInputVal] = useState("");
+  // const [date, setDate] = useState("");
 
-  const handleButtonClicked = (itemName, ItemDate) => {
-    handleNewItem(itemName, ItemDate);
-    setInputVal("");
-    setDate("");
+  const itemNameRef = useRef("");
+  const itemDateRef = useRef("");
+
+  const handleButtonClicked = (e, itemName, ItemDate) => {
+    e.preventDefault();
+    handleNewItem(itemName.current.value, ItemDate.current.value);
+    itemNameRef.current.value = "";
+    itemDateRef.current.value = "";
   };
   return (
     <div className="container todo_items_continer mb-4">
-      <div className="row">
+      <form
+        className="row"
+        onSubmit={(e) => handleButtonClicked(e, itemNameRef, itemDateRef)}>
         <div className="col-6">
-          <input
-            type="text"
-            placeholder="Enter Todo Here"
-            value={inputVal}
-            onChange={(e) => setInputVal(e.target.value)}
-          />
+          <input type="text" placeholder="Enter Todo Here" ref={itemNameRef} />
         </div>
         <div className="col-4">
-          <input
-            type="date"
-            onChange={(e) => setDate(e.target.value)}
-            value={date}
-          />
+          <input type="date" ref={itemDateRef} />
         </div>
         <div className="col-2">
-          <button
-            className="btn btn-primary"
-            onClick={() => handleButtonClicked(inputVal, date)}>
-            Add
-          </button>
+          <button className="btn btn-primary">Add</button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
