@@ -1,4 +1,5 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef } from "react";
+import { TodoItemsContext } from "../store/todo-items-store";
 
 const AddTodo = ({ handleNewItem }) => {
   // const [inputVal, setInputVal] = useState("");
@@ -7,17 +8,16 @@ const AddTodo = ({ handleNewItem }) => {
   const itemNameRef = useRef("");
   const itemDateRef = useRef("");
 
-  const handleButtonClicked = (e, itemName, ItemDate) => {
+  const { addNewItem } = useContext(TodoItemsContext);
+  const handleButtonClicked = (e) => {
     e.preventDefault();
-    handleNewItem(itemName.current.value, ItemDate.current.value);
+    addNewItem(itemNameRef.current.value, itemDateRef.current.value);
     itemNameRef.current.value = "";
     itemDateRef.current.value = "";
   };
   return (
     <div className="container todo_items_continer mb-4">
-      <form
-        className="row"
-        onSubmit={(e) => handleButtonClicked(e, itemNameRef, itemDateRef)}>
+      <form className="row" onSubmit={handleButtonClicked}>
         <div className="col-6">
           <input type="text" placeholder="Enter Todo Here" ref={itemNameRef} />
         </div>

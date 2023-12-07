@@ -5,16 +5,12 @@ import AppName from "./components/AppName";
 
 import TodoItems from "./components/TodoItems";
 import WelcomeMessage from "./components/WelcomeMessage";
+import { TodoItemsContext } from "./store/todo-items-store";
 
 function App() {
-  const initialItems = [
-    { id: 0, name: "Buy Milk", dueDate: "09/01/2023" },
-    { id: 1, name: "Buy Ghee", dueDate: "09/01/2023" },
-    { id: 2, name: "Buy Abc", dueDate: "09/01/2023" },
-  ];
-  const [todoItems, setTodoItems] = useState(initialItems);
+  const [todoItems, setTodoItems] = useState([]);
 
-  const handleNewItem = (itemName, itemDueDate) => {
+  const addNewItem = (itemName, itemDueDate) => {
     let id = 0;
     if (itemName !== "" && itemDueDate !== "") {
       if (todoItems.length == 0) {
@@ -23,30 +19,28 @@ function App() {
         id = todoItems[todoItems.length - 1].id + 1;
       }
       const newItem = { id: id, name: itemName, dueDate: itemDueDate };
-      setTodoItems([...todoItems, newItem]);
+      setTodoItems((prevItem) => [...prevItem, newItem]);
     }
   };
 
-  const handleDelete = (todoItemId) => {
-    setTodoItems(todoItems.filter((item) => item.id != todoItemId));
+  const deleteItem = (todoItemId) => {
+    setTodoItems((prevItems) =>
+      prevItems.filter((item) => item.id != todoItemId)
+    );
   };
 
   return (
-    <center className="todo_container">
-      <AppName />
-      <AddTodo
-        setTodoItems={setTodoItems}
-        todoItems={todoItems}
-        handleNewItem={handleNewItem}
-      />
-      <div>
-        {todoItems.length === 0 ? (
+    <TodoItemsContext.Provider value={{ todoItems, addNewItem, deleteItem }}>
+      <center className="todo_container">
+        <AppName />
+        <AddTodo setTodoItems={setTodoItems} todoItems={todoItems} />
+        <div>
           <WelcomeMessage />
-        ) : (
-          <TodoItems todoItems={todoItems} handleDelete={handleDelete} />
-        )}
-      </div>
-    </center>
+
+          <TodoItems />
+        </div>
+      </center>
+    </TodoItemsContext.Provider>
   );
 }
 

@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
+import { TodoItemsContext } from "../store/todo-items-store";
 
 const WelcomeMessage = () => {
+  const { todoItems } = useContext(TodoItemsContext);
   return (
     <div>
-      <h1 className="welcome-message">No Todos! Enjoy your day</h1>
+      {todoItems.length === 0 && (
+        <h1 className="welcome-message">No Todos! Enjoy your day</h1>
+      )}
     </div>
   );
 };
